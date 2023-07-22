@@ -35,7 +35,7 @@ function checkFileType(filename) {
   else return "file";
 }
 
-export default function GDriveTable() {
+export default function FilesTable() {
   const data = {
     folders: [
       {
