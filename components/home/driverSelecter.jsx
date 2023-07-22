@@ -14,7 +14,7 @@ export default function DriveSelector() {
           <Card className="w-[100%] mb-5">
             <CardContent className="p-5">
               <div className="flex items-center">
-                {drive.service === "google" && (
+                {drive.service === "gdrive" && (
                   <>
                     <Image
                       src="/images/services/google-drive.png"

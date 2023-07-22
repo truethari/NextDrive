@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 import SelectIcon, { HomeIcon, DownloadIcon } from "@/components/icons";
 
@@ -35,85 +36,28 @@ function checkFileType(filename) {
   else return "file";
 }
 
-export default function FilesTable() {
-  const data = {
-    folders: [
-      {
-        mimeType: "application/vnd.google-apps.folder",
-        id: "1y7g9o4iTZ724GGAtzoQbSmgOjHjvwvdP",
-        name: "Colab Notebooks",
-        modifiedTime: "2023-03-25T17:12:44.101Z",
-      },
-      {
-        mimeType: "application/vnd.google-apps.folder",
-        id: "1vqsj80Jz0J8JKVaoq-pPubUTUKoFTL-w",
-        name: "Machine Learning",
-        modifiedTime: "2023-02-17T05:03:17.022Z",
-      },
-      {
-        mimeType: "application/vnd.google-apps.folder",
-        id: "11GJpvWZYnhvCJcTxYpiJEDrIILB8sDRk",
-        name: "Public",
-        modifiedTime: "2023-02-17T04:48:55.560Z",
-      },
-    ],
-    files: [
-      {
-        size: "263945",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Image.jpg",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-      {
-        size: "63945",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Audio.mp3",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-      {
-        size: "12663925",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Video.mp4",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-      {
-        size: "13945",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Custom.bin",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-      {
-        size: "13945",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Document.pdf",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-      {
-        size: "13945",
-        id: "1Mxg0NHP15KyaG5cbje5MQlla0HFnxbMP",
-        name: "Archive.zip",
-        modifiedTime: "2023-07-15T14:16:48.213Z",
-      },
-    ],
-  };
-
-  const path = ["Home", "Folder"];
-
+export default function FilesTable({ data, path, slug }) {
   return (
     <>
       <div className="flex pb-5 pl-6">
-        <HomeIcon />
-        {path.map((folder, index) => (
-          <>
-            {index !== 0 && <span className="mx-2">/</span>}
-            <div
-              key={folder.id}
-              className="flex items-center bg-gray-200 dark:bg-gray-600 pl-2 pr-2 rounded-lg font-semibold text-sm text-gray-700 dark:text-gray-100"
-            >
-              {folder}
-            </div>
-          </>
-        ))}
+        <Link href={`/${slug[0]}`} className="flex">
+          <HomeIcon />
+          <div className="flex items-center bg-gray-200 dark:bg-gray-600 pl-2 pr-2 rounded-lg font-semibold text-sm text-gray-700 dark:text-gray-100">
+            Home
+          </div>
+        </Link>
+        {slug.map((folder, index) =>
+          index === 0 ? null : (
+            <React.Fragment key={folder.id}>
+              <span className="mx-2">/</span>
+              <div className="flex items-center bg-gray-200 dark:bg-gray-600 pl-2 pr-2 rounded-lg font-semibold text-sm text-gray-700 dark:text-gray-100">
+                <Link href={`/${slug[0]}/${slug.slice(1, index + 1).join("/")}`}>
+                  {decodeURIComponent(folder)}
+                </Link>
+              </div>
+            </React.Fragment>
+          ),
+        )}
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -142,7 +86,7 @@ export default function FilesTable() {
                 <td scope="row" className="px-6 py-2 font-medium text-gray-900 dark:text-white">
                   <div className="flex">
                     <SelectIcon type="folder" />
-                    {folder.name}
+                    <Link href={`/${path}/${folder.name}`}>{folder.name}</Link>
                   </div>
                 </td>
                 <td className="px-6 py-2">-</td>
