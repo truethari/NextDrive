@@ -70,7 +70,12 @@ export default function Drive({ params }) {
         <div className="container mt-[100px]">
           {isDriveExists ? (
             <>
-              <FilesTable data={data} path={`${slug[0] && slug[0]}/${path && path}`} slug={slug} />
+              <FilesTable
+                data={data}
+                path={`${slug[0] && slug[0]}/${path && path}`}
+                slug={slug}
+                service={drive.service}
+              />
             </>
           ) : (
             <>

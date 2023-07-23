@@ -36,7 +36,7 @@ function checkFileType(filename) {
   else return "file";
 }
 
-export default function FilesTable({ data, path, slug }) {
+export default function FilesTable({ data, path, slug, service }) {
   return (
     <>
       <div className="flex pb-5 pl-6">
@@ -91,9 +91,7 @@ export default function FilesTable({ data, path, slug }) {
                 </td>
                 <td className="px-6 py-2">-</td>
                 <td className="px-6 py-2">{formatDateTime(folder.modifiedTime)}</td>
-                <td className="px-6 py-2">
-                  <DownloadIcon />
-                </td>
+                <td className="px-6 py-2"></td>
               </tr>
             ))}
 
@@ -105,13 +103,31 @@ export default function FilesTable({ data, path, slug }) {
                 <td scope="row" className="px-6 py-2 font-medium text-gray-900 dark:text-white">
                   <div className="flex">
                     <SelectIcon type={checkFileType(file.name)} />
-                    {file.name}
+                    <a
+                      href={
+                        service === "gdrive"
+                          ? `/api/services/gdrive/download?driveId=${slug[0]}&fileId=${file.id}`
+                          : "#"
+                      }
+                      download
+                    >
+                      {file.name}
+                    </a>
                   </div>
                 </td>
                 <td className="px-6 py-2">{formatBytes(file.size)}</td>
                 <td className="px-6 py-2">{formatDateTime(file.modifiedTime)}</td>
                 <td className="px-6 py-2">
-                  <DownloadIcon />
+                  <a
+                    href={
+                      service === "gdrive"
+                        ? `/api/services/gdrive/download?driveId=${slug[0]}&fileId=${file.id}`
+                        : "#"
+                    }
+                    download
+                  >
+                    <DownloadIcon />
+                  </a>
                 </td>
               </tr>
             ))}
