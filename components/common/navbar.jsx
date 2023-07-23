@@ -37,7 +37,7 @@ export function ModeToggle() {
 
 export default function NavBar() {
   return (
-    <nav className="bg-white shadow dark:bg-zinc-900 relative">
+    <nav className="bg-white shadow dark:bg-zinc-900 fixed top-0 left-0 w-full h-16 z-50">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         <Link href="/" className="flex items-center">
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">

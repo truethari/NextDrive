@@ -13,9 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="bg-zinc-50 dark:bg-zinc-800">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="fixed top-0 left-0 w-full h-16 z-50">
-            <Navbar />
-          </div>
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>

@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import Drives from "@/config/drives";
+import Drives, { Main } from "@/config/drives";
 import Loading from "@/components/common/loading";
 import FilesTable from "@/components/common/filesTable";
+import Login from "@/components/common/login";
+import NotFound from "@/components/common/notFound";
 
 export default function Drive({ params }) {
   const [slug, setSlug] = useState([]);
@@ -13,8 +15,60 @@ export default function Drive({ params }) {
   const [loading, setLoading] = useState(true);
   const [drive, setDrive] = useState(null);
   const [isDriveExists, setIsDriveExists] = useState(false);
+  const [auth, setAuth] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const [folderNotExists, setFolderNotExists] = useState(false);
+
+  const onPasswordChange = (e) => setPassword(e.target.value);
+
+  const handleLogin = () => {
+    async function login() {
+      try {
+        const response = await axios.post("/api/auth", {
+          password,
+        });
+
+        if (response.data.token) {
+          sessionStorage.setItem("token", response.data.token);
+          setOpen(false);
+          setAuth(true);
+        } else {
+          alert("Invalid Password");
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Invalid Password");
+      }
+    }
+
+    login();
+  };
 
   useEffect(() => {
+    async function checkAuth() {
+      const token = sessionStorage.getItem("token");
+
+      if (token) {
+        const res = await axios.get("/api/auth", {
+          headers: {
+            "x-auth-token": token,
+          },
+        });
+        if (res.data.success) setAuth(true);
+        else sessionStorage.removeItem("token");
+      } else {
+        setOpen(true);
+      }
+    }
+
+    const realPath = params.slug.join("/");
+    const isProtected = Main.protected_routes.find((route) => route === realPath);
+    if (!isProtected) setAuth(true);
+    else checkAuth();
+
     setSlug(params.slug);
   }, [params]);
 
@@ -55,6 +109,10 @@ export default function Drive({ params }) {
           })
           .catch((err) => {
             console.log(err);
+            if (err.response.status === 404) {
+              setFolderNotExists(true);
+              setLoading(false);
+            }
           });
       }
     }
@@ -64,26 +122,49 @@ export default function Drive({ params }) {
     <>
       {loading ? (
         <>
-          <Loading />{" "}
+          <Loading />
         </>
       ) : (
-        <div className="container mt-[100px]">
-          {isDriveExists ? (
+        <>
+          {!auth ? (
             <>
-              <FilesTable
-                data={data}
-                path={`${slug[0] && slug[0]}/${path && path}`}
-                slug={slug}
-                service={drive.service}
-              />
+              <div className="flex justify-center items-center h-screen mt-[-35px]">
+                <h1>Not Authenticated</h1>
+              </div>
             </>
           ) : (
-            <>
-              <h1>Drive not found</h1>
-            </>
+            <div className="container mt-[100px]">
+              {isDriveExists ? (
+                <>
+                  {!folderNotExists ? (
+                    <>
+                      <FilesTable
+                        data={data}
+                        path={`${slug[0] && slug[0]}/${path && path}`}
+                        slug={slug}
+                        service={drive.service}
+                      />
+                    </>
+                  ) : (
+                    <NotFound />
+                  )}
+                </>
+              ) : (
+                <>
+                  <h1>Drive not found</h1>
+                </>
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
+      <Login
+        open={open}
+        setOpen={setOpen}
+        password={password}
+        onPasswordChange={onPasswordChange}
+        onLogin={handleLogin}
+      />
     </>
   );
 }
