@@ -10,9 +10,18 @@ async function getDriveFiles(AuthDrive, query) {
   });
 }
 
-async function getFilesInRoot(AuthDrive) {
-  const res = await getDriveFiles(AuthDrive, "'root' in parents");
-  const data = res.data.files;
+async function getFilesInRoot(AuthDrive, driveId) {
+  const drive = Drives.find((drive) => drive.id === driveId);
+
+  let res;
+  let data;
+
+  if (!drive.root) {
+    res = await getDriveFiles(AuthDrive, "'root' in parents");
+    data = res.data.files;
+  } else {
+    data = await getFilesInFolderPath(AuthDrive, "", driveId, false);
+  }
 
   let files;
   let folders;
@@ -23,7 +32,21 @@ async function getFilesInRoot(AuthDrive) {
   return NextResponse.json({ folders, files });
 }
 
-async function getFilesInFolderPath(AuthDrive, path) {
+async function getFilesInFolderPath(AuthDrive, path, driveId, apiResponse = true) {
+  const drive = Drives.find((drive) => drive.id === driveId);
+  let parentPath = drive.root;
+  if (parentPath[0] === "/") parentPath = drive.root.slice(1);
+
+  if (parentPath) {
+    const tmpPath = parentPath;
+    if (path) {
+      parentPath = `${parentPath}/${path}`;
+      path = parentPath;
+    } else {
+      path = tmpPath;
+    }
+  }
+
   const pathArray = path.split("/");
 
   const root = await getDriveFiles(AuthDrive, `'root' in parents and name = '${pathArray[0]}'`);
@@ -56,6 +79,8 @@ async function getFilesInFolderPath(AuthDrive, path) {
   const res = await getDriveFiles(AuthDrive, `'${folderId}' in parents`);
   const data = res.data.files;
 
+  if (!apiResponse) return data;
+
   let files;
   let folders;
 
@@ -78,7 +103,7 @@ export async function GET(request) {
 
   if (!path) {
     try {
-      return await getFilesInRoot(AuthDrive);
+      return await getFilesInRoot(AuthDrive, driveId);
     } catch (e) {
       return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
     }
@@ -87,7 +112,7 @@ export async function GET(request) {
     if (correctPath[0] === "/") correctPath = path.slice(1);
 
     try {
-      return await getFilesInFolderPath(AuthDrive, correctPath);
+      return await getFilesInFolderPath(AuthDrive, correctPath, driveId);
     } catch (e) {
       return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
     }

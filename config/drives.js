@@ -3,7 +3,7 @@ const Drives = [
     id: "1",
     name: "Google Drive 1",
     service: "gdrive",
-    parent_folder_id: "", // leave blank to use root folder
+    root: "", // leave blank to use root folder
     password: "", // leave blank if no password
     env: {
       client_id: "GOOGLE_CLIENT_ID",
