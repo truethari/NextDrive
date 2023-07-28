@@ -92,7 +92,7 @@ The `Main` object contains the following properties:
 
 ### Environment Variables
 
-NextDrive uses environment variables to connect to the cloud storage services. To add environment variables, create a `.env` file in the project directory and add the following:
+NextDrive uses environment variables to connect to the cloud storage services. To add environment variables, create a `.env.local` file in the project directory and add the following:
 
 ```env
 # GOOGLE DRIVE 1
