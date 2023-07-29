@@ -11,6 +11,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className="bg-zinc-50 dark:bg-zinc-800">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
