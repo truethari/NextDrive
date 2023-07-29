@@ -22,6 +22,8 @@
 
 NextDrive is a web application built using NextJS, designed to provide seamless access and management of public cloud drives over the internet. With NextDrive, users can effortlessly connect and interact with various cloud storage services, making data management and collaboration more efficient and convenient.
 
+Demo: [https://next-drive-omega.vercel.app/](https://next-drive-omega.vercel.app/)
+
 ## 📚 Features
 
 - **Cloud Storage Integration**: NextDrive supports multiple cloud storage services, including Google Drive. Users can connect to their cloud storage accounts and manage their files and folders directly from the NextDrive web application.
@@ -35,6 +37,10 @@ NextDrive is a web application built using NextJS, designed to provide seamless 
 - [NPM](https://www.npmjs.com/) (v8 or higher)
 
 ## ⚙️ Configuration
+
+Watch the video tutorial on YouTube: [https://youtu.be/zoD9EUniLT0](https://youtu.be/zoD9EUniLT0)
+
+You can use [NextDrive-toolkit](https://github.com/truethari/NextDrive-toolkit) to generate the configuration files.
 
 Navigate to the project directory and go to the `config` folder. Open file named `drives.js` and you will see the following:
 
@@ -110,6 +116,10 @@ JWT_SECRET=secret
 ```
 
 ## Installation
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftruethari%2FNextDrive&env=GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,JWT_SECRET)
+
+or
 
 1. Clone the repository: `git clone https://github.com/truethari/NextDrive.git`
 2. Navigate to the project directory: `cd NextDrive`
